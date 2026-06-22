@@ -36,10 +36,10 @@ class TournamentStartForm(ModelForm):
         required=False,
         label=_("Number of teams in the open break"),
         help_text=_("Leave blank if there are no break rounds."))
-
+    
     @staticmethod
     def add_default_feedback_questions(tournament):
-        from adjfeedback.models import AdjudicatorFeedback, Question
+        from adjfeedback.models import AdjudicatorFeedback, AdjudicatorFeedbackQuestion, Question
         from django.contrib.contenttypes.models import ContentType
         ct = ContentType.objects.get_for_model(AdjudicatorFeedback)
         agree = AdjudicatorFeedbackQuestion(
