@@ -47,14 +47,14 @@ class TournamentStartForm(ModelForm):
             text=_("Did you agree with their decision?"), name=_("Agree?"),
             reference="agree", from_adj=True, from_team=True,
             for_content_type=ct,
-            answer_type=Question.ANSWER_TYPE_BOOLEAN_SELECT)
+            answer_type=Question.AnswerType.BOOLEAN_SELECT)
         agree.save()
         comments = AdjudicatorFeedbackQuestion(
             tournament=tournament, seq=3, required=False,
             text=_("Comments"), name=_("Comments"),
             reference="comments", from_adj=True, from_team=True,
             for_content_type=ct,
-            answer_type=Question.ANSWER_TYPE_LONGTEXT)
+            answer_type=Question.AnswerType.LONGTEXT)
         comments.save()
         
     @staticmethod
