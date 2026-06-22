@@ -41,6 +41,12 @@ services:
         value: true
       - key: USING_NGINX
         value: 0 # Not 'false'; is cast
+      - key: PORT
+        value: 10000
+      - key: BREVO_API_KEY
+        sync: false
+      - key: DEFAULT_FROM_EMAIL
+        sync: false
   - type: redis
     name: tabbycat_redis
     ipAllowList: # required
