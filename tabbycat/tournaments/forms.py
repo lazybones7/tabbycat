@@ -8,7 +8,7 @@ from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 from django_summernote.widgets import SummernoteWidget
 
-from adjfeedback.models import AdjudicatorFeedbackQuestion
+from adjfeedback.models import AdjudicatorFeedback, Question
 from breakqual.models import BreakCategory
 from breakqual.utils import auto_make_break_rounds
 from options.preferences import TournamentStaff
@@ -37,10 +37,9 @@ class TournamentStartForm(ModelForm):
         label=_("Number of teams in the open break"),
         help_text=_("Leave blank if there are no break rounds."))
 
-    # Change add_default_feedback_questions to:
     @staticmethod
     def add_default_feedback_questions(tournament):
-        from adjfeedback.models import AdjudicatorFeedback
+        from adjfeedback.models import AdjudicatorFeedback, Question
         from django.contrib.contenttypes.models import ContentType
         ct = ContentType.objects.get_for_model(AdjudicatorFeedback)
         agree = AdjudicatorFeedbackQuestion(
@@ -48,14 +47,14 @@ class TournamentStartForm(ModelForm):
             text=_("Did you agree with their decision?"), name=_("Agree?"),
             reference="agree", from_adj=True, from_team=True,
             for_content_type=ct,
-            answer_type=AdjudicatorFeedbackQuestion.ANSWER_TYPE_BOOLEAN_SELECT)
+            answer_type=Question.ANSWER_TYPE_BOOLEAN_SELECT)
         agree.save()
         comments = AdjudicatorFeedbackQuestion(
             tournament=tournament, seq=3, required=False,
             text=_("Comments"), name=_("Comments"),
             reference="comments", from_adj=True, from_team=True,
             for_content_type=ct,
-            answer_type=AdjudicatorFeedbackQuestion.ANSWER_TYPE_LONGTEXT)
+            answer_type=Question.ANSWER_TYPE_LONGTEXT)
         comments.save()
         
     @staticmethod
