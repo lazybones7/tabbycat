@@ -37,24 +37,27 @@ class TournamentStartForm(ModelForm):
         label=_("Number of teams in the open break"),
         help_text=_("Leave blank if there are no break rounds."))
 
+    # Change add_default_feedback_questions to:
     @staticmethod
     def add_default_feedback_questions(tournament):
-        content_type = ContentType.objects.get(app_label="adjfeedback", model="adjudicatorfeedback")
+        from adjfeedback.models import AdjudicatorFeedback
+        from django.contrib.contenttypes.models import ContentType
+        ct = ContentType.objects.get_for_model(AdjudicatorFeedback)
         agree = AdjudicatorFeedbackQuestion(
             tournament=tournament, seq=2, required=True,
-            for_content_type=content_type,
             text=_("Did you agree with their decision?"), name=_("Agree?"),
             reference="agree", from_adj=True, from_team=True,
-            answer_type=AdjudicatorFeedbackQuestion.AnswerType.BOOLEAN_SELECT)
+            for_content_type=ct,
+            answer_type=AdjudicatorFeedbackQuestion.ANSWER_TYPE_BOOLEAN_SELECT)
         agree.save()
         comments = AdjudicatorFeedbackQuestion(
             tournament=tournament, seq=3, required=False,
-            for_content_type=content_type,
             text=_("Comments"), name=_("Comments"),
             reference="comments", from_adj=True, from_team=True,
-            answer_type=AdjudicatorFeedbackQuestion.AnswerType.LONGTEXT)
+            for_content_type=ct,
+            answer_type=AdjudicatorFeedbackQuestion.ANSWER_TYPE_LONGTEXT)
         comments.save()
-
+        
     @staticmethod
     def add_default_permission_groups(tournament: Tournament):
         for group in all_groups():
