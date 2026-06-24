@@ -242,3 +242,49 @@
 .draw-xl {
   font-size: $font-size-base * 1.55;
 }
+
+//------------------------------------------------------------------------------
+// Scoped Theme Customization: Public Motions Screen
+//------------------------------------------------------------------------------
+
+.public-motion-accent-card {
+    border-color: #40e0d0 !important;
+    background-color: #40e0d0 !important;
+    overflow: hidden; // Ensures rounded card corners clip cleanly
+
+    // Handles the container and structural elements
+    .list-group-flush, 
+    .list-group-item,
+    legend, .form-title {
+        background-color: #40e0d0 !important;
+        color: #111111 !important; // Ensures sharp text contrast against turquoise
+        border-color: rgba(0, 0, 0, 0.08) !important; // Clean, subtle division lines
+    }
+
+    // Styles the "Round X" heading text specifically
+    h3, .h3, h4, .h4 {
+        color: #000000 !important;
+        font-weight: 700;
+        margin-bottom: 0;
+    }
+
+    // Elegantly styles the "View Info Slide" button over the turquoise canvas
+    .btn-secondary, .btn-outline-secondary, .btn {
+        background-color: rgba(0, 0, 0, 0.12) !important;
+        border: none !important;
+        color: #111111 !important;
+        font-weight: 600;
+        transition: background-color 0.2s ease;
+
+        &:hover {
+            background-color: rgba(0, 0, 0, 0.22) !important;
+            color: #000000 !important;
+        }
+    }
+
+    // Keeps the sequence badges readable
+    .badge-info {
+        background-color: #111111 !important;
+        color: #40e0d0 !important;
+    }
+}
