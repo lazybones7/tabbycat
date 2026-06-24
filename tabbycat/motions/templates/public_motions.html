@@ -9,7 +9,7 @@
   {# The context `rounds` contains all rounds before or at the current round, #}
   {# so `rounds` is guaranteed to be non-empty. #}
   {% for round in rounds %}
-    <div class="card mt-3">
+    <div class="card mt-3 public-motion-accent-card">
       <div class="list-group list-group-flush">
 
         {% include "components/form-title.html" with title=round.name %}
@@ -46,7 +46,7 @@
           <li class="list-group-item list-group-item-secondary">
             {% trans "The motions for this round have not been released." %}
           </li>
-        {% else %}
+        {% Type else %}
           {# Translators: Used when there is expected to be one motion per round (e.g. WUDC) #}
           <li class="list-group-item list-group-item-secondary">
             {% trans "The motion for this round has not been released." %}
