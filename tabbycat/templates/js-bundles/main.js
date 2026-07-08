@@ -9,6 +9,7 @@ const $ = window.jQuery
 // Generic Templates
 import CheckboxTablesContainer from '../tables/CheckboxTablesContainer.vue'
 import TablesContainer from '../tables/TablesContainer.vue'
+import DonutChart from '../../templates/graphs/DonutChart.vue'
 // App Templates
 import CheckInStatusContainer from '../../checkins/templates/CheckInStatusContainer.vue'
 import DiversityContainer from '../../participants/templates/DiversityContainer.vue'
