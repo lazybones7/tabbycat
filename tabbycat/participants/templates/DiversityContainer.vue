@@ -1,192 +1,134 @@
 <script setup>
-import { defineAsyncComponent, toRefs } from 'vue'
-import { useDjangoI18n } from '../../templates/composables/useDjangoI18n.js'
-import TextDisplay from '../../templates/graphs/TextDisplay.vue'
+import { computed, getCurrentInstance, onMounted } from 'vue'
+import * as d3 from 'd3'
 
-const DonutChart = defineAsyncComponent(() => import('../../templates/graphs/DonutChart.vue'))
+function InitChart (vueContext) {
+  const pie = d3.pie()
+    .value(d => d.count)
+    .sort(null)
 
+  const arc = d3.arc()
+    .innerRadius(vueContext.radius - (vueContext.radius / 2))
+    .outerRadius(vueContext.radius - (vueContext.padding * 2))
+
+  // Correct selection targeting our persistent target div
+  const svg = d3.select(vueContext.$el).select('.chart-render-target').append('svg')
+    .attr('width', (vueContext.radius * 2) + vueContext.padding + vueContext.padding)
+    .attr('height', (vueContext.radius * 2) + vueContext.padding + vueContext.padding)
+    .append('g')
+    .attr('transform', `translate(${vueContext.radius + vueContext.padding
+    },${vueContext.radius + vueContext.padding})`)
+
+  const path = svg.selectAll('path')
+    .data(pie(vueContext.graphData.reverse()))
+    .enter().append('path')
+    .attr('class', (d, i) => `hoverable ${vueContext.colorclass(vueContext.graphData[i].label)}`)
+    .style('stroke', 'white')
+    .style('stroke-width', '1')
+    .attr('d', arc)
+
+  const tooltip = d3.select('body').append('div')
+    .attr('class', 'd3-tooltip tooltip')
+    .style('opacity', 0)
+
+  path.on('mouseover', function (event, d) {
+    const e = path.nodes()
+    const i = e.indexOf(this)
+    tooltip.html(`<div class='tooltip-inner'>${
+      vueContext.graphData[i].count} ${
+      vueContext.percentage(vueContext.graphData[i].count)
+    }<br>${
+      vueContext.nicelabel(vueContext.graphData[i].label)
+    }</div>`)
+      .style('left', `${event.pageX}px`)
+      .style('top', `${event.pageY - 28}px`)
+      .style('opacity', 1)
+    d3.select(this).style('opacity', 0.5)
+  })
+
+  path.on('mouseout', function () {
+    tooltip.style('opacity', 0)
+    d3.select(this).style('opacity', 1)
+  })
+}
 
 const props = defineProps({
-  graphsData: Object,
+  title: String,
+  graphData: Array,
+  radius: { type: Number, default: 60 },
+  padding: { type: Number, default: 1 },
+  regions: Array,
 })
 
-const { graphsData } = toRefs(props)
+const instance = getCurrentInstance()
+const proxy = instance?.proxy
 
-const { gettext } = useDjangoI18n()
+const total = computed(() => {
+  const graphData = Array.isArray(props.graphData) ? props.graphData : []
+  let total = 0
+  for (let i = 0; i < graphData.length; i += 1) {
+    total += graphData[i].count
+  }
+  return total
+})
+
+const colorclass = (label) => {
+  if (props.regions === undefined) {
+    return `gender-display gender-${label.toLowerCase()}`
+  }
+  return `region-display region-${label}`
+}
+
+const nicelabel = (label) => {
+  if (label === 'Male') {
+    return 'Male identifying'
+  } else if (label === 'NM') {
+    return 'Non-cis male identifying'
+  } else if (label === 'Unknown') {
+    return 'Unspecified or unrecorded'
+  }
+  return props.regions[label].name
+}
+
+const percentage = (quantity) => {
+  return ` (${Math.round((quantity / total.value) * 100)}%)`
+}
+
+// Reverted back to onMounted layout to guarantee elements exist
+onMounted(() => {
+  if (props.graphData !== undefined && total.value > 0 && proxy?.$el) {
+    InitChart({
+      $el: proxy.$el,
+      radius: props.radius,
+      padding: props.padding,
+      graphData: props.graphData,
+      colorclass,
+      percentage,
+      nicelabel,
+    })
+  }
+})
 </script>
 
 <template>
-  <div class="card-deck">
-    <div class="card mt-3">
-      <div class="card-body text-center px-0">
-        <h5 class="card-title mb-4">
-          {{ gettext('Speaker Demographics') }}
-        </h5>
-        <donut-chart
-          v-for="set in graphsData.speakers_gender"
-          :key="'gender-' + set.title"
-          :graph-data="set.data"
-          :title="set.title"
-        />
-        <p
-          v-if="graphsData.speakers_gender.length === 0"
-          class="text-muted"
-        >
-          {{ gettext('No Gender Information') }}
-        </p>
-        <hr>
-        <donut-chart
-          v-for="set in graphsData.speakers_categories"
-          :key="'categories-' + set.title"
-          :graph-data="set.data"
-          :title="set.title"
-        />
-        <p
-          v-if="graphsData.speakers_categories.length === 0"
-          class="text-muted"
-        >
-          {{ gettext('No Speaker Categories Information') }}
-        </p>
-        <hr>
-        <donut-chart
-          v-for="set in graphsData.speakers_region"
-          :key="'region-' + set.title"
-          :graph-data="set.data"
-          :title="set.title"
-          :regions="graphsData.regions"
-        />
-        <p
-          v-if="graphsData.speakers_region.length === 0"
-          class="text-muted"
-        >
-          {{ gettext('No Region Information') }}
-        </p>
-        <hr>
-      </div>
-    </div>
+  <div :style="{ width: '49.5%', display: 'inline-block' }">
+    <h6
+      v-if="total > 0"
+      class="text-center text-muted pt-0 mb-3"
+    >
+      {{ title }}<br>({{ total }})
+    </h6>
+    
+    <div 
+      class="chart-render-target d-flex justify-content-center mb-3" 
+      :style="{ display: total > 0 ? 'flex' : 'none' }"
+    ></div>
 
-    <div class="card mt-3">
-      <div class="card-body text-center">
-        <h5 class="card-title mb-4">
-          {{ gettext('Speaker Results') }}
-        </h5>
-        <h6 class="text-muted">
-          {{ graphsData.gendered_speakers }}
-          <span>{{ gettext('speakers with gender data') }}</span><br>
-          {{ graphsData.speaks_count }}
-          <span>{{ gettext('speaker scores analysed') }}</span>
-        </h6>
-        <hr>
-        <text-display
-          v-for="set in graphsData.speakers_results"
-          :key="'speakers-' + set.title"
-          :set="set"
-        />
-        <p
-          v-if="graphsData.speakers_results.length === 0"
-          class="text-muted"
-        >
-          {{ gettext('No Gender Information') }}
-        </p>
-        <text-display
-          v-for="set in graphsData.detailed_speakers_results"
-          :key="'dspeakers-' + set.title"
-          :set="set"
-        />
-        <p
-          v-if="graphsData.detailed_speakers_results.length === 0"
-          class="text-muted"
-        >
-          {{ gettext('No Region Information') }}
-        </p>
-      </div>
-    </div>
-
-    <div class="card mt-3">
-      <div class="card-body text-center px-0">
-        <h5 class="card-title mb-4">
-          {{ gettext('Adjudicator Demographics') }}
-        </h5>
-        <donut-chart
-          v-for="set in graphsData.adjudicators_gender"
-          :key="'demo-' + set.title"
-          :graph-data="set.data"
-          :title="set.title"
-        />
-        <p
-          v-if="graphsData.adjudicators_gender.length === 0"
-          class="text-muted"
-        >
-          {{ gettext('No Gender Information') }}
-        </p>
-        <hr>
-        <donut-chart
-          v-for="set in graphsData.adjudicators_position"
-          :key="'position-' + set.title"
-          :graph-data="set.data"
-          :title="set.title"
-        />
-        <p
-          v-if="graphsData.adjudicators_position.length === 0"
-          class="text-muted"
-        >
-          {{ gettext('No Position Information') }}
-        </p>
-        <hr>
-        <donut-chart
-          v-for="set in graphsData.adjudicators_region"
-          :key="'region-' + set.title"
-          :graph-data="set.data"
-          :title="set.title"
-          :regions="graphsData.regions"
-        />
-        <p
-          v-if="graphsData.adjudicators_region.length === 0"
-          class="text-muted"
-        >
-          {{ gettext('No Region Information') }}
-        </p>
-        <hr>
-      </div>
-    </div>
-
-    <div class="card mt-3">
-      <div class="card-body text-center">
-        <h5 class="card-title mb-4">
-          {{ gettext('Adjudicator Results') }}
-        </h5>
-        <h6 class="text-muted">
-          {{ graphsData.gendered_adjudicators }}
-          <span>{{ gettext('adjudicators with gender data') }}</span><br>
-          {{ graphsData.feedbacks_count }}
-          <span>{{ gettext('feedback scores analysed') }}</span>
-        </h6>
-        <hr>
-        <text-display
-          v-for="set in graphsData.adjudicators_results"
-          :key="'adjs-' + set.title"
-          :set="set"
-        />
-        <p
-          v-if="graphsData.adjudicators_results.length === 0"
-          class="text-muted"
-        >
-          {{ gettext('No Adjudicator Ratings Information') }}
-        </p>
-        <hr>
-        <text-display
-          v-for="set in graphsData.detailed_adjudicators_results"
-          :key="'dadjs-' + set.title"
-          :set="set"
-        />
-        <p
-          v-if="graphsData.detailed_adjudicators_results.length === 0"
-          class="text-muted"
-        >
-          {{ gettext('No Adjudicator-Adjudicator Feedback Information') }}
-        </p>
-        <hr>
-      </div>
-    </div>
+    <h6
+      v-if="total === 0"
+      class="text-center text-muted pt-1 mb-1"
+    >
+      no data for<br> {{ title }}
+    </h6>
   </div>
 </template>
