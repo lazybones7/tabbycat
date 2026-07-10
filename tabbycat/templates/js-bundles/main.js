@@ -199,8 +199,7 @@ vueComponents.BallotEntryContainer = BallotEntryContainer
 // Note the 3d graphs are async loaded inline as part of components: {}
 // Check-Ins (thus delays loading quagga)
 vueComponents.CheckInScanContainer = defineAsyncComponent(() => import('../../checkins/templates/CheckInScanContainer.vue'))
-// Diversity Overview (async loaded due to D3 dependency weight)
-vueComponents.DonutChart = defineAsyncComponent(() => import('../../templates/graphs/DonutChart.vue'))
+
 
 // -----------------------------------------------------------------------------
 // Main Vue Instance
@@ -262,6 +261,7 @@ if (typeof vueData !== 'undefined') {
       Sentry.addIntegration(Sentry.vueIntegration({ app }));
     }
     app.use(pinia)
+    app.component('DonutChart', defineAsyncComponent(() => import('../../templates/graphs/DonutChart.vue')))
     useDragAndDropStore(pinia)
     app.mixin(vueTranslationMixin)
     app.mount('#vueMount')
