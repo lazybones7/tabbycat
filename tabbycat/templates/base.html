@@ -196,7 +196,35 @@
   {% endblock %}
 
   {% block js %}
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        var toggle = document.getElementById('theme-toggle');
+        var link = document.getElementById('theme-stylesheet');
+        if (!toggle || !link) return;
 
+        var emojiIcon = document.getElementById('theme-toggle-icon');
+        var featherIcon = document.getElementById('theme-toggle-icon-admin');
+        var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+
+        function updateIcon() {
+          if (emojiIcon) emojiIcon.textContent = isDark ? '☀️' : '🌙';
+          if (featherIcon) {
+            featherIcon.setAttribute('data-feather', isDark ? 'sun' : 'moon');
+          if (window.feather) feather.replace();
+      }
+        }
+        updateIcon();
+
+        toggle.addEventListener('click', function () {
+          isDark = !isDark;
+          link.href = isDark ? link.getAttribute('data-dark-href') : link.getAttribute('data-light-href');
+          document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+          localStorage.setItem('tabbycat-theme', isDark ? 'dark' : 'light');
+        updateIcon();
+        });
+      });
+    </script>
+  
     <script src="{% statici18n LANGUAGE_CODE %}"></script>
     <script src="{% static 'js/vendor/jquery.js' %}"></script>
     <script>
