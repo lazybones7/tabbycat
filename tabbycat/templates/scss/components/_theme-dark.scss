@@ -17,3 +17,35 @@ $theme-colors-override: (
   light: #495057, // equivalent to $gray-700
   dark:  #e9ecef  // equivalent to $gray-200
 );
+
+// Add to _theme-dark.scss
+$card-bg:                   $alt-bg;
+$list-group-bg:              $alt-bg;
+$list-group-color:           $body-color;
+$list-group-hover-bg:        $table-bg-hover;
+$list-group-border-color:    $navbar-light-border;
+
+$dropdown-bg:                $alt-bg;
+$dropdown-color:             $body-color;
+$dropdown-link-color:        $body-color;
+$dropdown-link-hover-bg:     $table-bg-hover;
+$dropdown-link-hover-color:  $body-color;
+$dropdown-border-color:      $navbar-light-border;
+
+$navbar-light-color:         rgba($body-color, .7);
+$navbar-light-hover-color:   $body-color;
+$navbar-light-active-color:  $body-color;
+$navbar-light-toggler-border-color: rgba($body-color, .2);
+
+$table-color:                $body-color;
+$table-bg:                   transparent;
+$table-border-color:         $navbar-light-border;
+
+$input-bg:                   $alt-bg;
+$input-color:                $body-color;
+$input-border-color:         $navbar-light-border;
+
+$modal-content-bg:           $alt-bg;
+$modal-content-color:        $body-color;
+
+$popover-bg:                 $alt-bg;
