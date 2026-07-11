@@ -1,0 +1,19 @@
+//------------------------------------------------------------------------------
+// Dark Theme Surface Values
+//------------------------------------------------------------------------------
+
+$body-bg:              #1a1d23;
+$body-color:           #e4e6eb;
+
+$alt-bg:               #23262d;
+$table-bg-hover:       #2d313a;
+$sidebar-bg:           #14161a;
+$sidebar-muted-text:   $gray-500;
+$droppable-bg:         #2d313a;
+$navbar-light-bg:      $alt-bg;
+$navbar-light-border:  #34383f;
+
+$theme-colors-override: (
+  light: $gray-700,
+  dark:  $gray-200
+);
