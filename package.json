@@ -5,7 +5,7 @@
     "serve": "npm-run-all -p serve-*",
     "serve-django": "dj r 0.0.0.0:8000",
     "serve-live": "livereload 'tabbycat/' --exts 'css' --exclusions 'tabbycat/static/vue/'",
-    "serve-sass": "npm run build-sass -- --watch --style=expanded & npm run build-sass-print -- --watch --style=expanded --source-map",
+    "serve-sass": "npm run build-sass -- --watch --style=expanded & npm run build-sass-dark -- --watch --style=expanded & npm run build-sass-print -- --watch --style=expanded --source-map",
     "serve-vue": "npx vite",
     "serve-worker": "dj runworker notifications adjallocation venues",
     "build": "NODE_ENV='production' npm-run-all -p build-* cp-*",
