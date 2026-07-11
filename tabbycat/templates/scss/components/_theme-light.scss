@@ -9,11 +9,11 @@ $alt-bg:               #fff;
 $table-bg-hover:       #e3e3e3;
 $sidebar-bg:           #333c47;
 $sidebar-muted-text:   #ced4da; // equivalent to $gray-400
-$droppable-bg:         #e9ecef  // equivalent to $gray-200
+$droppable-bg:         #e9ecef;  // equivalent to $gray-200
 $navbar-light-bg:      $alt-bg;
-$navbar-light-border:  #e9ecef  // equivalent to $gray-200
+$navbar-light-border:  #e9ecef;  // equivalent to $gray-200
 
 $theme-colors-override: (
-  light: #ced4da; // equivalent to $gray-400
+  light: #ced4da, // equivalent to $gray-400
   dark:  #343a40 // $gray-800
 );
