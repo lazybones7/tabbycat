@@ -1,9 +1,8 @@
+// Theme surface values — LIGHT (must load before bootstrap-custom)
+@import 'components/theme-light';
 
 // Boostrap overrides/customisation (load before bootstrap)
 @import 'components/custom';
-
-// Theme surface values — LIGHT (must load before bootstrap-custom)
-@import 'components/theme-light';
 
 // Bootstrap (custom module selection)
 @import 'components/bootstrap-custom';
