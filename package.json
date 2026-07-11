@@ -10,6 +10,7 @@
     "serve-worker": "dj runworker notifications adjallocation venues",
     "build": "NODE_ENV='production' npm-run-all -p build-* cp-*",
     "build-sass": "npx sass --style=compressed --load-path=node_modules/ tabbycat/templates/scss/style.scss tabbycat/static/css/style.css",
+    "build-sass-dark": "npx sass --style=compressed --load-path=node_modules/ tabbycat/templates/scss/style-dark.scss tabbycat/static/css/style-dark.css",
     "build-sass-print": "npx sass --style=compressed tabbycat/templates/scss/printables.scss tabbycat/static/css/printables.css",
     "build-vue": "npx vite build",
     "windows-build": "SET NODE_ENV='production' & npm-run-all -p build-* cp-*",
