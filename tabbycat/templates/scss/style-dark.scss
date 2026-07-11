@@ -1,8 +1,8 @@
-// Boostrap overrides/customisation (load before bootstrap)
-@import 'components/custom';
-
 // Theme surface values — DARK (must load before bootstrap-custom)
 @import 'components/theme-dark';
+
+// Boostrap overrides/customisation (load before bootstrap)
+@import 'components/custom';
 
 // Bootstrap (custom module selection)
 @import 'components/bootstrap-custom';
