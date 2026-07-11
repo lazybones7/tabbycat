@@ -12,13 +12,15 @@
   .axis path,
   .axis line {
     fill: none;
-    stroke: #ccc;
+//REM for DarkMode   stroke: #ccc; 
+    stroke: mix($body-color, $body-bg, 30%);
     shape-rendering: crispEdges;
   }
 }
 
 .d3-hover-black:hover {
-  fill: black;
+//REM for DarkMode  fill: black;
+  fill: $body-color;
 }
 
 // Preventing flickering hover tooltips
@@ -35,7 +37,8 @@
   .tick line,
   .axis line {
     fill: none;
-    stroke: #e6e6e6;
+//REM for DarkMode  stroke: #e6e6e6;
+    stroke: mix($body-color, $body-bg, 20%);
   }
 }
 
