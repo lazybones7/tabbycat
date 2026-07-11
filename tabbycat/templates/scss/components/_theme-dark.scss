@@ -14,6 +14,6 @@ $navbar-light-bg:      $alt-bg;
 $navbar-light-border:  #34383f;
 
 $theme-colors-override: (
-  light: $gray-700,
-  dark:  $gray-200
+  light: #495057, // equivalent to $gray-700
+  dark:  #e9ecef  // equivalent to $gray-200
 );
