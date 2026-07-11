@@ -44,10 +44,13 @@ $gray-700: #495057 !default;
 $gray-800: #343a40 !default;
 $gray-900: #212529 !default;
 
+/* REMOVED FOR DARK MODE
 // Key Colors
 $body-bg:                 #f8fafc;
 $body-color:              $gray-900; // Gray-900 equivalent; for body text
 
+*/ 
+/* REMOVED FOR DARK MODE
 $theme-colors: (
   primary: $purple,
   secondary: $gray-600,
@@ -57,6 +60,19 @@ $theme-colors: (
   danger: $red,
   light: $gray-400,
   dark: $gray-800
+);
+*/ 
+
+$theme-colors: map-merge(
+  (
+    primary: $purple,
+    secondary: $gray-600,
+    success: $green,
+    info: $blue,
+    warning: $orange,
+    danger: $red,
+  ),
+  $theme-colors-override
 );
 
 //------------------------------------------------------------------------------
