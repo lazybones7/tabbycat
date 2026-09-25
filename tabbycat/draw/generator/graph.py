@@ -1,3 +1,4 @@
+import random
 from collections import OrderedDict
 from typing import Optional, TYPE_CHECKING
 
@@ -8,6 +9,11 @@ from ..types import DebateSide
 
 if TYPE_CHECKING:
     from participants.models import Team
+
+# Must be many orders of magnitude below the smallest real penalty unit
+# (side_penalty=1) so it can only ever break exact ties, never override
+# a genuine cost difference.
+RANDOM_TIEBREAK_EPSILON = 1e-6
 
 
 def sign(n: int) -> int:
@@ -54,6 +60,8 @@ class GraphGeneratorMixin:
             magnitude = (abs(t1_affs - t1_negs) + abs(t2_affs - t2_negs)) // 2
 
             penalty += imbalance * magnitude * self.options["side_penalty"]
+        if self.options.get("pairing_method") == "random":
+            penalty += random.uniform(0, RANDOM_TIEBREAK_EPSILON)
 
         return penalty
 
