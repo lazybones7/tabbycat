@@ -10,11 +10,6 @@ from ..types import DebateSide
 if TYPE_CHECKING:
     from participants.models import Team
 
-# Must be many orders of magnitude below the smallest real penalty unit
-# (side_penalty=1) so it can only ever break exact ties, never override
-# a genuine cost difference.
-RANDOM_TIEBREAK_EPSILON = 1e-6
-
 
 def sign(n: int) -> int:
     """Sign function for integers, -1, 0, or 1"""
@@ -60,8 +55,6 @@ class GraphGeneratorMixin:
             magnitude = (abs(t1_affs - t1_negs) + abs(t2_affs - t2_negs)) // 2
 
             penalty += imbalance * magnitude * self.options["side_penalty"]
-        if self.options.get("pairing_method") == "random":
-            penalty += random.uniform(0, RANDOM_TIEBREAK_EPSILON)
 
         return penalty
 
@@ -75,6 +68,9 @@ class GraphGeneratorMixin:
         i = 0
         for j, (points, teams) in enumerate(brackets.items()):
             pairings[points] = []
+            if self.options.get("pairing_method") == "random":
+                teams = list(teams)
+                random.shuffle(teams)
             graph = nx.Graph()
             n_teams = self.get_n_teams(teams)
             for k, t1 in enumerate(teams):
