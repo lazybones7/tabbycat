@@ -9,8 +9,8 @@ from django.utils.translation import gettext as _
 from .common import BasePairDrawGenerator, DrawFatalError, DrawUserError
 from .graph import GraphAllocatedSidesMixin, GraphGeneratorMixin
 from .one_up_one_down import OneUpOneDownSwapper
-from ..generator.random import GraphRandomDrawMixin
 from .pairing import Pairing
+from ..generator.random import GraphRandomDrawMixin
 from ..types import DebateSide
 
 if TYPE_CHECKING:
